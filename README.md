@@ -1,2 +1,1 @@
-# Initial Readme setup 
-- Feel free to add documentation here
+# My Place - The best place hosting and activities experience
