@@ -9,15 +9,18 @@ open Giraffe
 let apiRoutes: HttpHandler =
   subRoute
     "/api"
-    (choose [ GET
-              >=> choose [ route "/health"
-                           >=> json {| message = "API is in good health" |} ] ])
+    (choose
+      [ GET
+        >=> choose
+          [ route "/health"
+            >=> json {| message = "API is in good health" |} ] ])
 
 let webApp =
-  (choose [ GET
-            >=> choose [ route "/" >=> htmlFile "./pages/index.html" ]
-            apiRoutes
-            setStatusCode 404 >=> text "Not Found" ])
+  (choose
+    [ GET
+      >=> choose [ route "/" >=> htmlFile "./pages/index.html" ]
+      apiRoutes
+      setStatusCode 404 >=> text "Not Found" ])
 
 let configureApp (app: IApplicationBuilder) =
   // Add Giraffe to the ASP.NET Core pipeline
