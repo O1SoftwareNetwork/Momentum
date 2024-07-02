@@ -1,0 +1,11 @@
+{
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "Ionide.Ionide-fsharp",
+	"editor.inlayHints.enabled": "off",
+	"editor.parameterHints.enabled": false,
+	"editor.codeLens": false,
+	 "FSharp.lineLens.enabled": "never",
+	 "FSharp.inlayHints.typeAnnotations": false,
+	 "FSharp.codeLenses.signature.enabled": false
+
+}
