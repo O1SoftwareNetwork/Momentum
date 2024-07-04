@@ -1,9 +1,12 @@
+import { useTheme } from '@mui/material';
+
 /**
  *
  * @param props useAsLoader if animation should be used otherwise use as a static image
  * @returns
  */
 function Logo(props: { useAsLoader?: boolean }) {
+	const theme = useTheme();
 	return (
 		<svg
 			version='1.0'
@@ -14,7 +17,7 @@ function Logo(props: { useAsLoader?: boolean }) {
 			<g
 				transform='translate(0.000000,500.000000) scale(0.100000,-0.100000)'
 				stroke='none'
-				fill={'#066868'}
+				fill={theme.palette.primary.main}
 			>
 				<path
 					className={props.useAsLoader ? 'path1' : ''}

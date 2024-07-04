@@ -6,7 +6,7 @@ function MainView() {
 		<View>
 			<img src='/traveling.svg' alt='traveling placeholder' />
 			<Typography variant='h4'>
-				We currently dont have much to show, please come back
+				We currently don't have much to show, please come back
 			</Typography>
 		</View>
 	);
