@@ -11,6 +11,11 @@
 		"devserver": "concurrently \"pnpm dev\" \"dotnet watch --project ../backend/server/server.fsproj\" "
 	},
 	"dependencies": {
+		"@emotion/react": "^11.11.4",
+		"@emotion/styled": "^11.11.5",
+		"@fontsource/roboto": "^5.0.13",
+		"@mui/icons-material": "^5.15.21",
+		"@mui/material": "^5.15.21",
 		"@types/node": "^20.14.9",
 		"overmind": "^28.0.3",
 		"overmind-react": "^29.0.5",

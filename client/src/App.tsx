@@ -1,21 +1,21 @@
-import { useLayoutEffect } from 'react';
-import { useActions, useAppState } from './store';
-import Logo from './assets/Logo';
+import { Box } from '@mui/material';
+import Footer from './components/common/Footer';
+import MainView from './components/common/MainView';
+import Navbar from './components/common/Navbar';
 
 function App() {
-	const state = useAppState();
-	const actions = useActions();
-	useLayoutEffect(() => {
-		actions.sample.changeMessage();
-	}, []);
-
 	return (
-		<>
-			<div style={{ width: '150px', height: '150px' }}>
-				<Logo useAsLoader />
-			</div>
-			<h1>Backend Test message: {state.sample.message}</h1>
-		</>
+		<Box
+			sx={{
+				display: 'flex',
+				minHeight: '100vh',
+				flexDirection: 'column',
+			}}
+		>
+			<Navbar />
+			<MainView />
+			<Footer />
+		</Box>
 	);
 }
 
