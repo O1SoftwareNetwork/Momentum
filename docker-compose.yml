@@ -1,5 +1,6 @@
 services:
-  client:
+  momentum.client:
+    container_name: momentum.client
     build:
       context: ./client
       dockerfile: Dockerfile
@@ -8,12 +9,11 @@ services:
     volumes:
       - ./client:/app
       - /app/node_modules
-    command: ["pnpm", "run", "dev"]
-    develop:
-        watch:
-          - action: rebuild
-            path: .
-  backend:
+    restart: "always"
+    depends_on:
+      - momentum.backend
+  momentum.backend:
+    container_name: momentum.backend
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -23,7 +23,20 @@ services:
       - ./backend:/app
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - momentum.database
     develop:
       watch:
         - action: rebuild
           path: ./*
+  momentum.database:
+    image: postgres:latest
+    container_name: momentum.database
+    environment:
+      - POSTGRES_DB=momentum
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./.containers/momentum-db:/var/lib/postgresql/data
+    ports: 
+      - 5432:5432

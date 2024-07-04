@@ -7,9 +7,12 @@ export default defineConfig({
 	server: {
 		host: '0.0.0.0',
 		port: 3000,
+		watch: {
+			usePolling: true,
+		},
 		proxy: {
 			'/api': {
-				target: 'http://localhost:5000',
+				target: 'http://momentum.backend:5000',
 				changeOrigin: true,
 			},
 		},
