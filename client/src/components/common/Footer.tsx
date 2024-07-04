@@ -1,8 +1,7 @@
-import { Facebook, Twitter, X, GitHub } from '@mui/icons-material';
+import { Facebook, X, GitHub } from '@mui/icons-material';
 import {
 	Box,
 	Container,
-	Grid,
 	Typography,
 	IconButton,
 	useTheme,
