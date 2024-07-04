@@ -8,6 +8,8 @@ open Giraffe
 open System
 open Microsoft.Extensions.Logging
 
+Console.WriteLine "Server is working fine"
+
 let errorHandler (ex: Exception) (logger: ILogger) =
   logger.LogError(EventId(), ex, "An unhandled exception has occurred while executing the request.")
   clearResponse >=> setStatusCode 500 >=> json {| message = ex.Message |}
@@ -57,9 +59,8 @@ let configureServices (services: IServiceCollection) =
 let hostBuilder (webHostBuilder: IWebHostBuilder) =
   webHostBuilder
     .Configure(configureApp)
-    .ConfigureServices(configureServices)
     .ConfigureLogging(configureLogging)
-  |> ignore
+    .ConfigureServices(configureServices)
 
 [<EntryPoint>]
 let main _ =
