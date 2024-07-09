@@ -4,9 +4,13 @@ open Xunit
 open Swensen.Unquote
 open Microsoft.AspNetCore.Hosting
 open Microsoft.AspNetCore.TestHost
+open System.Text.Json
+open User.Domain
+open System
 
 [<Fact>]
 let `` API Health test `` () =
+
     let webHostBuilder = new WebHostBuilder() |> APIServer.hostBuilder
 
     let server = new TestServer(webHostBuilder)
@@ -15,8 +19,8 @@ let `` API Health test `` () =
     let response =
         task {
             let! response = client.GetAsync(@"\api\health")
-            let! content = response.Content.ReadAsStringAsync()
-            return content
+            let! stringContent = response.Content.ReadAsStringAsync()
+            return stringContent
         }
         |> Async.AwaitTask
         |> Async.RunSynchronously
@@ -25,6 +29,7 @@ let `` API Health test `` () =
 
 [<Fact>]
 let `` API Fail Check `` () =
+
     let webHostBuilder = new WebHostBuilder() |> APIServer.hostBuilder
 
     let server = new TestServer(webHostBuilder)
@@ -40,6 +45,3 @@ let `` API Fail Check `` () =
         |> Async.RunSynchronously
 
     test <@ response = "{\"message\":\"Testing failed message\"}" @>
-
-[<Fact>]
-let `` Can say Hello`` () = Assert.Equal("Hello", "Hello")
