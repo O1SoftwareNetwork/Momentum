@@ -23,6 +23,7 @@ services:
       - ./backend:/app
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - CONNECTION_STRING=Host=momentum.database;Port=5432;Database=momentum;Username=postgres;Password=postgres
     depends_on:
       - momentum.database
     develop:

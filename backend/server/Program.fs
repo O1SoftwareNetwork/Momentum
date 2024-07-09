@@ -6,7 +6,11 @@ open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Hosting
 open Giraffe
 open System
+open System.Configuration
 open Microsoft.Extensions.Logging
+open User.Domain
+open Microsoft.Extensions.Configuration
+open MigrationRunner
 
 Console.WriteLine "Server is working fine"
 
@@ -15,25 +19,68 @@ let errorHandler (ex: Exception) (logger: ILogger) =
   clearResponse >=> setStatusCode 500 >=> json {| message = ex.Message |}
 
 let sendHealthMessage =
-  fun ctx next -> json {| message = "The API routes are working as expected" |} ctx next
+  fun next ctx ->
+    json
+      {|
+        message = "The API routes are working as expected"
+      |}
+      next
+      ctx
+
 
 let sendTestMessage =
   fun _ next ->
     failwith "Testing failed message"
     earlyReturn next
 
+
+let sendUsers =
+  fun next ctx ->
+    let mockUsers: User list = [
+      {
+        id = Guid.NewGuid()
+        firstName = "John"
+        lastNAme = "Doe"
+        username = "J_doe"
+        password = "Password1"
+        email = "jdoe@sample.com"
+        profile_image = ""
+        created_at = DateTime.Now
+        updated_at = DateTime.Now
+      }
+    ]
+
+    json mockUsers next ctx
+
+let healthRoutes: HttpHandler =
+  choose [
+    route "/health" >=> sendHealthMessage
+  ]
+
+let testRoutes: HttpHandler =
+  choose [ route "/fail" >=> sendTestMessage ]
+
+let userRoutes: HttpHandler =
+  choose [ route "" >=> sendUsers ]
+
 let apiRoutes: HttpHandler =
   subRoute
     "/api"
-    (choose
-      [ GET >=> choose [ route "/health" >=> sendHealthMessage ]
-        GET >=> choose [ route "/fail" >=> sendTestMessage ] ])
+    (choose [
+      GET >=> healthRoutes
+      GET >=> testRoutes
+      subRoute "/users" (choose [ GET >=> userRoutes ])
+    ])
 
 let webApp =
-  (choose
-    [ GET >=> choose [ route "/" >=> htmlFile "./pages/index.html" ]
-      apiRoutes
-      setStatusCode 404 >=> text "Not Found" ])
+  choose [
+    GET
+    >=> choose [
+      route "/" >=> htmlFile "./pages/index.html"
+    ]
+    apiRoutes
+    setStatusCode 404 >=> text "Not Found"
+  ]
 
 let configureApp (app: IApplicationBuilder) =
   // Add Giraffe to the ASP.NET Core pipeline
@@ -51,8 +98,19 @@ let configureLogging (builder: ILoggingBuilder) =
   // Add additional loggers if wanted...
   |> ignore
 
-
 let configureServices (services: IServiceCollection) =
+
+  let configuration =
+    ConfigurationBuilder()
+      .AddJsonFile("appsettings.json", optional = false, reloadOnChange = true)
+      .AddEnvironmentVariables()
+      .Build()
+
+  let connectionString =
+    configuration.GetConnectionString("DefaultConnection")
+
+  runMigrations connectionString migrations
+
   // Add Giraffe dependencies
   services.AddGiraffe() |> ignore
 
